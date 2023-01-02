@@ -5,10 +5,56 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Buffer</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
 </head>
 <body>
-    <h1>Welcome to daily buffer and we are ready for you ...</h1>
-    <p>hello this is a webpage for you</p>
-    <h3>hello this is simple web page</h3>
+    <h1>Welcome to daily buffer</h1>
+    <p>hello you have to enter a food item and you will get all detail about them</p>
+    <br>
+    <input type="text" id="inparea" placeholder="Enter the name">
+    <button id="search">search</button>
+    <p id="answer"></p>
+    <script>
+        let button=document.getElementById('search');
+        button.addEventListener('click',()=>{
+            let text=document.getElementById('inparea').value;
+            // console.log(text);
+           
+
+const options = {
+  method: 'GET',
+  url: 'https://calorieninjas.p.rapidapi.com/v1/nutrition',
+  params: {query: text},
+  headers: {
+    'X-RapidAPI-Key': '6a470279c7mshc24e7631ba39188p13309ajsna8c3e521439b',
+    'X-RapidAPI-Host': 'calorieninjas.p.rapidapi.com'
+  }
+};
+
+axios.request(options).then(function (response) {
+	console.log(response.data.items[0]);
+    let res=response.data.items[0];
+    if(res==undefined){
+        document.getElementById("answer").innerHTML='Please enter a valid item'
+    }
+    // let len=response.data.items[0].length();
+    let len = Object.keys(res).length;
+    console.log(len);
+    var vector=['calories','carbohydrates_total_g','cholesterol_mg','fat_saturated_g','fat_total_g','fiber_g','name','potassium_mg','protein_g','serving_size_g','sodium_mg','sugar_g'];
+    // console.log(res.vector[0]);
+    
+    let text = "<table border='1'>"
+  for (let x =0;x<11;x++) {
+    let emp=vector[x];
+    console.log(res[emp]);
+    text += "<tr><td>" + emp+'---'+res[emp] + "</td></tr>";
+  }
+  text += "</table>"    
+  document.getElementById("answer").innerHTML = text;
+}).catch(function (error) {
+	console.error(error);
+});
+})
+    </script>
 </body>
 </html>
